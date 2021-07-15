@@ -565,7 +565,7 @@ bool Estimator::GNSSVIAlign()
     
     for (uint32_t i = 0; i < (WINDOW_SIZE+1); ++i)
     {
-        if (gnss_meas_buf[i].empty() || gnss_meas_buf[i].size() < 10)
+        if (gnss_meas_buf[i].empty() || gnss_meas_buf[i].size() < 3) // yuwen: tune down threshold
             return false;
     }
 

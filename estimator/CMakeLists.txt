@@ -66,3 +66,8 @@ add_executable(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${OpenCV_LIBS} ${CERES_LIBRARIES})
 add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}_generate_messages_cpp)
 # add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
+
+add_executable(global_tf_pub src/global_tf_pub.cpp)
+target_link_libraries(global_tf_pub ${catkin_LIBRARIES})
+add_dependencies(global_tf_pub ${catkin_EXPORTED_TARGETS})
+

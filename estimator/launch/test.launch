@@ -1,5 +1,5 @@
+<?xml version="1.0"?>
 <launch>
-
     <include file="$(find ublox_driver)/launch/ublox_driver.launch" /> 
     <include file="$(find gvins)/launch/rs_d435_camera_with_model.launch" >
         <arg name="enable_sync" value="true"/>
@@ -10,9 +10,10 @@
         <arg name="unite_imu_method" value="linear_interpolation"/>
 	<arg name="color_width"         default="640"/>
 	<arg name="color_height"         default="480"/>
-    </include>
-    <include file="$(find gvins)/launch/visensor_f9p.launch" />
-    <!-- <node pkg="gvins" type="global_tf_pub" name="global_tf_pub" /> -->
+</include> 
+<!--<include file="$(find gvins)/launch/visensor_f9p.launch" />-->
+<!--    <node pkg="gvins" type="global_tf_pub" name="global_tf_pub" /> -->
+<!--    <node pkg="gvins" type="imu_sync" name="imu_sync" />-->
 
     <!--<node pkg="tf" type="static_transform_publisher" name="world_odom_publish" args="0 0 0 0 0 0 odom world 10" /> --> 
 

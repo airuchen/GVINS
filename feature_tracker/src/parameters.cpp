@@ -2,6 +2,7 @@
 
 std::string IMAGE_TOPIC;
 std::string IMU_TOPIC;
+std::string GLOBAL_IMU_TOPIC;
 std::vector<std::string> CAM_NAMES;
 std::string FISHEYE_MASK;
 int MAX_CNT;
@@ -47,6 +48,7 @@ void readParameters(ros::NodeHandle &n)
 
     fsSettings["image_topic"] >> IMAGE_TOPIC;
     fsSettings["imu_topic"] >> IMU_TOPIC;
+    fsSettings["global_imu_topic"] >> GLOBAL_IMU_TOPIC;
     MAX_CNT = fsSettings["max_cnt"];
     MIN_DIST = fsSettings["min_dist"];
     ROW = fsSettings["image_height"];

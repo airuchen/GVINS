@@ -12,7 +12,7 @@ void poseCallback(const geometry_msgs::PoseStampedPtr& msg) {
 	q[2] = msg->pose.orientation.z;
 	q[3] = msg->pose.orientation.w;
         transform.setRotation(q);
-        br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "odom", "base_link"));
+        br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "world", "base_link"));
 }
 
 int main(int argc, char** argv){

@@ -20,6 +20,7 @@ std::string EX_CALIB_RESULT_PATH;
 std::string VINS_RESULT_PATH;
 std::string FACTOR_GRAPH_RESULT_PATH;
 std::string IMU_TOPIC;
+std::string GLOBAL_IMU_TOPIC;
 double ROW, COL;
 double TD;
 
@@ -67,6 +68,7 @@ void readParameters(ros::NodeHandle &n)
     }
 
     fsSettings["imu_topic"] >> IMU_TOPIC;
+    fsSettings["global_imu_topic"] >> GLOBAL_IMU_TOPIC;
 
     SOLVER_TIME = fsSettings["max_solver_time"];
     NUM_ITERATIONS = fsSettings["max_num_iterations"];

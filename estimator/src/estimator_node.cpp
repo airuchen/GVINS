@@ -30,6 +30,8 @@ queue<std::vector<ObsPtr>> gnss_meas_buf;
 queue<sensor_msgs::PointCloudConstPtr> relo_buf;
 int sum_of_wait = 0;
 
+sensor_msgs::Imu global_imu_data;
+
 std::mutex m_buf;
 std::mutex m_state;
 std::mutex i_buf;
@@ -196,6 +198,10 @@ void imu_callback(const sensor_msgs::ImuConstPtr &imu_msg)
         if (estimator_ptr->solver_flag == Estimator::SolverFlag::NON_LINEAR)
             pubLatestOdometry(tmp_P, tmp_Q, tmp_V, header);
     }
+}
+
+void global_imu_callback(const sensor_msgs::Imu &imu){
+    global_imu_data = imu;
 }
 
 void gnss_ephem_callback(const GnssEphemMsgConstPtr &ephem_msg)
@@ -450,6 +456,7 @@ int main(int argc, char **argv)
         skip_parameter = 0;
 
     ros::Subscriber sub_imu = n.subscribe(IMU_TOPIC, 2000, imu_callback, ros::TransportHints().tcpNoDelay());
+    ros::Subscriber sub_global_imu = n.subscribe(GLOBAL_IMU_TOPIC, 2000, global_imu_callback, ros::TransportHints().tcpNoDelay());
     ros::Subscriber sub_feature = n.subscribe("/gvins_feature_tracker/feature", 2000, feature_callback);
     ros::Subscriber sub_restart = n.subscribe("/gvins_feature_tracker/restart", 2000, restart_callback);
 

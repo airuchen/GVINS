@@ -182,6 +182,9 @@ void pubGnssResult(const Estimator &estimator, const std_msgs::Header &header)
     sensor_msgs::NavSatFix gnss_lla_msg;
     gnss_lla_msg.header.stamp = ros::Time(gnss_ts);
     gnss_lla_msg.header.frame_id = "geodetic";
+    gnss_lla_msg.position_covariance[0] = 0.0;
+    gnss_lla_msg.position_covariance[4] = 0.0;
+    gnss_lla_msg.position_covariance[8] = 0.0;
     gnss_lla_msg.latitude = lla_pos.x();
     gnss_lla_msg.longitude = lla_pos.y();
     gnss_lla_msg.altitude = lla_pos.z();

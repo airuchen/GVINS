@@ -1,7 +1,8 @@
 %YAML:1.0
 
 #common parameters
-imu_topic: "/camera/imu" # "/imu0" # "/imu/data"
+imu_topic: "/sync_imu" # "/camera/imu" #  # "/imu0" # "/imu/data"
+# global_imu_topic: "/imu/data"
 image_topic: "/camera/color/image_raw" # "/cam0/image_raw" # "/image_raw"
 output_dir: "~/output/"
 

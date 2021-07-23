@@ -71,3 +71,10 @@ add_executable(global_tf_pub src/global_tf_pub.cpp)
 target_link_libraries(global_tf_pub ${catkin_LIBRARIES})
 add_dependencies(global_tf_pub ${catkin_EXPORTED_TARGETS})
 
+add_executable(imu_sync src/imu_sync.cpp)
+target_link_libraries(imu_sync ${catkin_LIBRARIES})
+add_dependencies(imu_sync ${catkin_EXPORTED_TARGETS})
+
+add_executable(imu_repub_with_orientation src/imu_repub_with_orientation.cpp)
+target_link_libraries(imu_repub_with_orientation ${catkin_LIBRARIES})
+add_dependencies(imu_repub_with_orientation ${catkin_EXPORTED_TARGETS})

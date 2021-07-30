@@ -407,7 +407,8 @@ void process()
             xyz_uv_velocity << x, y, z, p_u, p_v, velocity_x, velocity_y;
             image[feature_id].emplace_back(camera_id,  xyz_uv_velocity);
         }
-        estimator_ptr->processImage(image, img_msg->header);
+        sensor_msgs::Imu test_data = global_imu_data;
+        estimator_ptr->processImage(image, img_msg->header, test_data);
 
         double whole_t = t_s.toc();
         printStatistics(*estimator_ptr, whole_t);

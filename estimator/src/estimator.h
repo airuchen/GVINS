@@ -31,6 +31,11 @@
 #include <gnss_comm/gnss_ros.hpp>
 #include <gnss_comm/gnss_spp.hpp>
 
+#include <sensor_msgs/Imu.h>
+#include "geometry_msgs/Vector3.h"
+#include "geometry_msgs/Quaternion.h"
+#include "tf/transform_datatypes.h"
+
 using namespace gnss_comm;
 
 class Estimator
@@ -47,20 +52,20 @@ class Estimator
     void inputIonoParams(double ts, const std::vector<double> &iono_params);
     void inputGNSSTimeDiff(const double t_diff);
 
-    void processImage(const map<int, vector<pair<int, Eigen::Matrix<double, 7, 1>>>> &image, const std_msgs::Header &header);
+    void processImage(const map<int, vector<pair<int, Eigen::Matrix<double, 7, 1>>>> &image, const std_msgs::Header &header, const sensor_msgs::Imu &global_imu_data);
 
     // internal
     void clearState();
     bool initialStructure();
     bool visualInitialAlign();
     // GNSS related
-    bool GNSSVIAlign();
+    bool GNSSVIAlign(const sensor_msgs::Imu &global_imu_data);
 
     void updateGNSSStatistics();
 
     bool relativePose(Matrix3d &relative_R, Vector3d &relative_T, int &l);
     void slideWindow();
-    void solveOdometry();
+    void solveOdometry(const sensor_msgs::Imu &global_imu_data);
     void slideWindowNew();
     void slideWindowOld();
     void optimization();

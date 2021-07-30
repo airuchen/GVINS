@@ -181,7 +181,7 @@ void pubGnssResult(const Estimator &estimator, const std_msgs::Header &header)
     printf("latitude longitude altitude: %f, %f, %f\n", lla_pos.x(), lla_pos.y(), lla_pos.z());
     sensor_msgs::NavSatFix gnss_lla_msg;
     gnss_lla_msg.header.stamp = ros::Time(gnss_ts);
-    gnss_lla_msg.header.frame_id = "geodetic";
+    gnss_lla_msg.header.frame_id = "map";
     gnss_lla_msg.position_covariance[0] = 0.0;
     gnss_lla_msg.position_covariance[4] = 0.0;
     gnss_lla_msg.position_covariance[8] = 0.0;
@@ -194,6 +194,7 @@ void pubGnssResult(const Estimator &estimator, const std_msgs::Header &header)
     const Eigen::Vector3d anc_lla = ecef2geo(estimator.anc_ecef);
     sensor_msgs::NavSatFix anc_lla_msg;
     anc_lla_msg.header = gnss_lla_msg.header;
+    anc_lla_msg.header.frame_id = "map";
     anc_lla_msg.latitude = anc_lla.x();
     anc_lla_msg.longitude = anc_lla.y();
     anc_lla_msg.altitude = anc_lla.z();
@@ -206,10 +207,15 @@ void pubGnssResult(const Estimator &estimator, const std_msgs::Header &header)
     R_s_c <<  0,  0,  1,
              -1,  0,  0,
               0, -1,  0;
+    /*
+    R_s_c <<  1,  0,  0,
+              0,  1,  0,
+              0,  0,  1;
+              */
     Eigen::Matrix3d R_w_sensor = estimator.Rs[WINDOW_SIZE] * estimator.ric[0] * R_s_c.transpose();
     Eigen::Quaterniond enu_ori(estimator.R_enu_local * R_w_sensor);
     enu_pose_msg.header.stamp = header.stamp;
-    enu_pose_msg.header.frame_id = "world";     // "enu" will more meaningful, but for viz
+    enu_pose_msg.header.frame_id = "map";     // "enu" will more meaningful, but for viz
     enu_pose_msg.pose.position.x = estimator.enu_pos.x();
     enu_pose_msg.pose.position.y = estimator.enu_pos.y();
     enu_pose_msg.pose.position.z = estimator.enu_pos.z();
@@ -235,7 +241,7 @@ void pubGnssResult(const Estimator &estimator, const std_msgs::Header &header)
     tf_q.setY(q_enu_world.y());
     tf_q.setZ(q_enu_world.z());
     transform_enu_world.setRotation(tf_q);
-    br.sendTransform(tf::StampedTransform(transform_enu_world, header.stamp, "enu", "world"));
+    br.sendTransform(tf::StampedTransform(transform_enu_world, header.stamp, "map", "world"));
 
     // write GNSS result to file
     ofstream gnss_output(GNSS_RESULT_PATH, ios::app);

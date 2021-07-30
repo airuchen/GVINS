@@ -129,7 +129,7 @@ void Estimator::processIMU(double dt, const Vector3d &linear_acceleration, const
     gyr_0 = angular_velocity;
 }
 
-void Estimator::processImage(const map<int, vector<pair<int, Eigen::Matrix<double, 7, 1>>>> &image, const std_msgs::Header &header)
+void Estimator::processImage(const map<int, vector<pair<int, Eigen::Matrix<double, 7, 1>>>> &image, const std_msgs::Header &header, const sensor_msgs::Imu &global_imu_data)
 {
     ROS_DEBUG("new image coming ------------------------------------------");
     ROS_DEBUG("Adding feature points %lu", image.size());
@@ -180,7 +180,7 @@ void Estimator::processImage(const map<int, vector<pair<int, Eigen::Matrix<doubl
             if(result)
             {
                 solver_flag = NON_LINEAR;
-                solveOdometry();
+                solveOdometry(global_imu_data);
                 slideWindow();
                 f_manager.removeFailures();
                 ROS_INFO("Initialization finish!");
@@ -201,7 +201,7 @@ void Estimator::processImage(const map<int, vector<pair<int, Eigen::Matrix<doubl
     else
     {
         TicToc t_solve;
-        solveOdometry();
+        solveOdometry(global_imu_data);
         ROS_DEBUG("solver costs: %fms", t_solve.toc());
 
         if (failureDetection())
@@ -555,7 +555,7 @@ bool Estimator::visualInitialAlign()
     return true;
 }
 
-bool Estimator::GNSSVIAlign()
+bool Estimator::GNSSVIAlign(const sensor_msgs::Imu &global_imu_data)
 {
     if (solver_flag == INITIAL)     // visual-inertial not initialized
         return false;
@@ -654,6 +654,19 @@ bool Estimator::GNSSVIAlign()
 
     yaw_enu_local = aligned_yaw;
 
+    // use xsense global orientation
+    geometry_msgs::Quaternion msg;
+    msg.x = global_imu_data.orientation.x;
+    msg.y = global_imu_data.orientation.y;
+    msg.z = global_imu_data.orientation.z;
+    msg.w = global_imu_data.orientation.w;
+
+    tf::Quaternion quat;
+    tf::quaternionMsgToTF(msg, quat);
+    double roll, pitch, yaw;
+    tf::Matrix3x3(quat).getRPY(roll, pitch, yaw);
+    yaw_enu_local = yaw;
+
     return true;
 }
 
@@ -698,7 +711,7 @@ bool Estimator::relativePose(Matrix3d &relative_R, Vector3d &relative_T, int &l)
     return false;
 }
 
-void Estimator::solveOdometry()
+void Estimator::solveOdometry(const sensor_msgs::Imu &global_imu_data)
 {
     if (frame_count < WINDOW_SIZE)
         return;
@@ -712,7 +725,7 @@ void Estimator::solveOdometry()
         {
             if (!gnss_ready)
             {
-                gnss_ready = GNSSVIAlign();
+                gnss_ready = GNSSVIAlign(global_imu_data);
             }
             if (gnss_ready)
             {

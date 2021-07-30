@@ -12,9 +12,9 @@
 	<arg name="color_height"         default="480"/>
 </include>
     <!--GVINS-->
-    <!-- <include file="$(find gvins)/launch/visensor_f9p.launch" /> -->
+    <include file="$(find gvins)/launch/visensor_f9p.launch" /> 
     <!-- publish gvins global tf -->
-    <!-- <node pkg="gvins" type="global_tf_pub" name="global_tf_pub" /> -->
+    <node pkg="gvins" type="global_tf_pub" name="global_tf_pub" /> 
     <!-- sync xsense and realsense imu -->
-    <!-- <node pkg="gvins" type="imu_sync" name="imu_sync" /> -->
+    <node pkg="gvins" type="imu_sync" name="imu_sync" /> 
 </launch>
